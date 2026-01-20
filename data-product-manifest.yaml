@@ -3,7 +3,7 @@ jobName: Programming & Scheduling Insights
 jobType: Source Aligned Data Product
 developerId: 2161a325-4de5-43e9-839a-8ee5c52cb81e
 domain: cmt
-alias: loading Programming Scheduling Insights data in iceberg
+alias: loading_Programming_Scheduling_Insights_data_in_iceberg
 discoveryPort:
   name: Programming & Scheduling Insights
 inputPorts:
