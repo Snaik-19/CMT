@@ -72,7 +72,7 @@ productState:
         sourceTable: Program_Scheduling
       program_type:
         type: STRING
-        description: Type or category of the program (movie, show, live, etc.)
+        description: Type or category of the program
         sourceColumn: program_type
         sourceTable: Program_Scheduling
       schedule_status:
