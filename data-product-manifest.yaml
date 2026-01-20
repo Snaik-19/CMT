@@ -1,0 +1,119 @@
+jobId: "1061"
+jobName: Programming & Scheduling Insights
+jobType: Source Aligned Data Product
+developerId: 2161a325-4de5-43e9-839a-8ee5c52cb81e
+domain: cmt
+alias: loading_Programming_&_Scheduling_Insights_data_in_iceberg
+discoveryPort:
+  name: Programming & Scheduling Insights
+inputPorts:
+  - alias: Program_Scheduling_1
+    isDynamic: true
+    path: s3a://dataverse/testbed/cmt/sadp_programming_scheduling.csv
+    optional:
+      persistDataFrame: false
+      advanceOptions:
+        delimiter: ","
+      enableDataReconciliation: false
+      enforceSchema: false
+      connection: S3 Connection - CMT
+      dataSetUrn: urn:dv:dataset:a8a5dc60-31ff-4d8c-8385-fc3773bec76c
+    type: inputDelimited
+productState:
+  isDynamic: true
+  alias: loading_Programming_&_Scheduling_Insights_data_in_iceberg
+  retentionVersions: ""
+  logicalSchema:
+    properties:
+      channel_id:
+        type: STRING
+        description: Unique identifier of the broadcast or distribution channel
+        sourceColumn: channel_id
+        sourceTable: Program_Scheduling
+      schedule_date:
+        type: STRING
+        description: Date on which the program is scheduled
+        sourceColumn: schedule_date
+        sourceTable: Program_Scheduling
+      program_id:
+        type: STRING
+        description: Unique identifier of the scheduled program
+        sourceColumn: program_id
+        sourceTable: Program_Scheduling
+      content_id:
+        type: STRING
+        description: Unique identifier of the content being scheduled
+        sourceColumn: content_id
+        sourceTable: Program_Scheduling
+      start_time:
+        type: STRING
+        description: Scheduled start time of the program
+        sourceColumn: start_time
+        sourceTable: Program_Scheduling
+      end_time:
+        type: STRING
+        description: Scheduled end time of the program
+        sourceColumn: end_time
+        sourceTable: Program_Scheduling
+      scheduled_duration_minutes:
+        type: STRING
+        description: Planned duration of the program in minutes
+        sourceColumn: scheduled_duration_minutes
+        sourceTable: Program_Scheduling
+      total_channel_hours:
+        type: STRING
+        description: Total available broadcast hours for the channel in the given period
+        sourceColumn: total_channel_hours
+        sourceTable: Program_Scheduling
+      prime_time_flag:
+        type: STRING
+        description: Indicates whether the program is scheduled during prime time
+        sourceColumn: prime_time_flag
+        sourceTable: Program_Scheduling
+      program_type:
+        type: STRING
+        description: Type or category of the program (movie, show, live, etc.)
+        sourceColumn: program_type
+        sourceTable: Program_Scheduling
+      schedule_status:
+        type: STRING
+        description: Current status of the program schedule
+        sourceColumn: schedule_status
+        sourceTable: Program_Scheduling
+      created_timestamp:
+        type: STRING
+        description: Timestamp when the schedule record was created
+        sourceColumn: created_timestamp
+        sourceTable: Program_Scheduling
+  stateStoreType: loadDataIceberg
+  isProfilingEnabled: false
+  updateStrategy: Overwrite
+  tableName: iceberg_meta.programming_scheduling_insights
+  warehousePath: s3a://dataverse/testbed_load/
+  catalogName: postgres_catalog
+  optional:
+    persistDataFrame: false
+    enableDataReconciliation: false
+    enforceSchema: true
+    enforceSchemaMethod: Warning
+    catalogType: postgres
+    connection: S3 Connection - CMT
+    loggingOptions:
+      printSchema: true
+  refreshInterval: 30 5 * * *
+transformation:
+  - isDynamic: true
+    alias: Spark_SQL_1
+    description: Transforming Programming & Scheduling Insights
+    sequence: 2
+    inputDataFrameList:
+      - inputDataFrame: Program_Scheduling_1
+        tempViewName: A1
+    query: select * from A1
+    optional:
+      persistDataFrame: false
+      loggingOptions:
+        printSchema: true
+    type: operationThroughSqlQuery
+controlPort:
+  dataQualityRules: {}
