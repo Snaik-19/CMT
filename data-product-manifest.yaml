@@ -21,7 +21,7 @@ inputPorts:
     type: inputDelimited
 productState:
   isDynamic: true
-  alias: loading_Programming_&_Scheduling_Insights_data_in_iceberg
+  alias: loading_Programming_Scheduling_Insights_data_in_iceberg
   retentionVersions: ""
   logicalSchema:
     properties:
