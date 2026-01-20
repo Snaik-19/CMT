@@ -1,0 +1,130 @@
+jobId: "1062"
+jobName: Engagement Metrics
+jobType: Source Aligned Data Product
+developerId: 2161a325-4de5-43e9-839a-8ee5c52cb81e
+domain: cmt
+alias: loading_Engagement_Metrics_data_in_iceberg
+discoveryPort:
+  name: Engagement Metrics
+inputPorts:
+  - alias: Sessionized_Events_1
+    isDynamic: true
+    path: s3a://dataverse/testbed/cmt/sadp_engagement_events.csv
+    optional:
+      persistDataFrame: false
+      advanceOptions:
+        delimiter: ","
+      enableDataReconciliation: false
+      enforceSchema: false
+      connection: S3 Connection - CMT
+      dataSetUrn: urn:dv:dataset:831d77ee-1ccf-4dc3-aeb1-f8c39f31d339
+    type: inputDelimited
+  - alias: User_Profile_1
+    isDynamic: true
+    path: s3a://dataverse/testbed/cmt/user_profile.csv
+    optional:
+      persistDataFrame: false
+      advanceOptions:
+        delimiter: ","
+      enableDataReconciliation: false
+      enforceSchema: false
+      connection: S3 Connection - CMT
+      dataSetUrn: urn:dv:dataset:6b0b6fa0-2855-4a46-8629-acfd856667dd
+    type: inputDelimited
+productState:
+  isDynamic: true
+  alias: loading_Engagement_Metrics_data_in_iceberg
+  retentionVersions: ""
+  logicalSchema:
+    properties:
+      user_id:
+        type: STRING
+        description: Unique identifier of the user generating engagement activity
+        sourceColumn: user_id
+        sourceTable: src_user_profile
+      session_id:
+        type: STRING
+        description: Unique identifier of a user viewing session
+        sourceColumn: session_id
+        sourceTable: src_sessionized_events
+      activity_date:
+        type: STRING
+        description: Date on which the engagement activity occurred, derived from
+          session start time
+        sourceColumn: session_start_time
+        sourceTable: src_sessionized_events
+      session_start_time:
+        type: STRING
+        description: Timestamp when the user session started
+        sourceColumn: session_start_time
+        sourceTable: src_sessionized_events
+      session_end_time:
+        type: STRING
+        description: Timestamp when the user session ended
+        sourceColumn: session_end_time
+        sourceTable: src_sessionized_events
+      total_watch_time_sec:
+        type: STRING
+        description: Total watch time accumulated during the session in seconds
+        sourceColumn: total_watch_time_sec
+        sourceTable: src_sessionized_events
+      page_views:
+        type: STRING
+        description: Total number of pages or content items viewed in the session,
+          derived per session
+        sourceColumn: session_id
+        sourceTable: src_sessionized_events
+      single_page_session_flag:
+        type: STRING
+        description: Indicates whether the session consisted of a single page view
+        sourceColumn: session_id
+        sourceTable: src_sessionized_events
+      device_type:
+        type: STRING
+        description: Type of device used during the engagement session
+        sourceColumn: device_type
+        sourceTable: src_sessionized_events
+      platform:
+        type: STRING
+        description: Platform on which the content was consumed (web, mobile, TV, etc.)
+        sourceColumn: platform
+        sourceTable: src_sessionized_events
+      region:
+        type: STRING
+        description: Geographic region of the user during engagement
+        sourceColumn: region
+        sourceTable: src_sessionized_events
+  stateStoreType: loadDataIceberg
+  isProfilingEnabled: false
+  updateStrategy: Overwrite
+  tableName: iceberg_meta.engagement_metrics
+  warehousePath: s3a://dataverse/testbed_load/
+  catalogName: postgres_catalog
+  optional:
+    persistDataFrame: false
+    enableDataReconciliation: false
+    enforceSchema: true
+    enforceSchemaMethod: Warning
+    catalogType: postgres
+    connection: S3 Connection - CMT
+    loggingOptions:
+      printSchema: true
+  refreshInterval: 30 5 * * *
+transformation:
+  - isDynamic: true
+    alias: Spark_SQL_1
+    description: Transforming Engagement Metrics
+    sequence: 3
+    inputDataFrameList:
+      - inputDataFrame: Sessionized_Events_1
+        tempViewName: B1
+      - inputDataFrame: User_Profile_1
+        tempViewName: B2
+    query: select * from B1
+    optional:
+      persistDataFrame: false
+      loggingOptions:
+        printSchema: true
+    type: operationThroughSqlQuery
+controlPort:
+  dataQualityRules: {}
