@@ -1,0 +1,148 @@
+jobId: "1065"
+jobName: Content Master
+jobType: Source Aligned Data Product
+developerId: 2161a325-4de5-43e9-839a-8ee5c52cb81e
+domain: cmt
+alias: loading_Content_Master_data_in_iceberg
+discoveryPort:
+  name: Content Master
+inputPorts:
+  - alias: Content_Ingestion_1
+    isDynamic: true
+    path: s3a://dataverse/testbed/cmt/content_ingestion.csv
+    optional:
+      persistDataFrame: false
+      advanceOptions:
+        delimiter: ","
+      enableDataReconciliation: false
+      enforceSchema: false
+      connection: S3 Connection - CMT
+      dataSetUrn: urn:dv:dataset:6a83512d-8c48-48d6-973c-6a6b698e2cf2
+    type: inputDelimited
+  - alias: Playback_Events_1
+    isDynamic: true
+    path: s3a://dataverse/testbed/cmt/sadp_content_master.csv
+    optional:
+      persistDataFrame: false
+      advanceOptions:
+        delimiter: ","
+      enableDataReconciliation: false
+      enforceSchema: false
+      connection: S3 Connection - CMT
+      dataSetUrn: urn:dv:dataset:88beefca-848e-4af8-9cba-c128306e1281
+    type: inputDelimited
+productState:
+  isDynamic: true
+  alias: loading_Content_Master_data_in_iceberg
+  retentionVersions: ""
+  logicalSchema:
+    properties:
+      content_id:
+        type: STRING
+        description: Unique identifier for the content item
+        sourceColumn: content_id
+        sourceTable: content_ingestion
+      title_name:
+        type: STRING
+        description: Title of the content
+        sourceColumn: title_name
+        sourceTable: content_ingestion
+      content_type:
+        type: STRING
+        description: Type of content such as movie, series, or episode
+        sourceColumn: content_type
+        sourceTable: content_ingestion
+      parent_content_id:
+        type: STRING
+        description: Identifier of the parent content (e.g., series for an episode)
+        sourceColumn: asset_id
+        sourceTable: content_ingestion
+      genre:
+        type: STRING
+        description: Primary genre of the content
+        sourceColumn: genre
+        sourceTable: content_ingestion
+      sub_genre:
+        type: STRING
+        description: Secondary or sub-genre classification derived from genre
+        sourceColumn: genre
+        sourceTable: content_ingestion
+      language:
+        type: STRING
+        description: Primary language of the content
+        sourceColumn: language
+        sourceTable: content_ingestion
+      release_date:
+        type: STRING
+        description: Original release or publishing date of the content
+        sourceColumn: created_date
+        sourceTable: content_ingestion
+      production_house:
+        type: STRING
+        description: Production house or content provider
+        sourceColumn: ingestion_source
+        sourceTable: content_ingestion
+      content_rating:
+        type: STRING
+        description: Content rating or classification
+        sourceColumn: resolution
+        sourceTable: content_ingestion
+      duration_sec:
+        type: STRING
+        description: Total duration of the content in seconds
+        sourceColumn: duration_sec
+        sourceTable: content_ingestion
+      content_status:
+        type: STRING
+        description: Current lifecycle status of the content (active, inactive, archived)
+        sourceColumn: ingestion_status
+        sourceTable: content_ingestion
+      availability_start_date:
+        type: STRING
+        description: Date and time when the content becomes available
+        sourceColumn: created_date
+        sourceTable: content_ingestion
+      availability_end_date:
+        type: STRING
+        description: Date and time when the content is no longer available
+        sourceColumn: ingestion_timestamp
+        sourceTable: content_ingestion
+      content_cost:
+        type: STRING
+        description: Derived or estimated content cost based on playback metrics
+        sourceColumn: bitrate
+        sourceTable: playback_events
+  stateStoreType: loadDataIceberg
+  isProfilingEnabled: false
+  updateStrategy: Overwrite
+  tableName: iceberg_meta.content_master
+  warehousePath: s3a://dataverse/testbed_load/
+  catalogName: postgres_catalog
+  optional:
+    persistDataFrame: false
+    enableDataReconciliation: false
+    enforceSchema: true
+    enforceSchemaMethod: Warning
+    catalogType: postgres
+    connection: S3 Connection - CMT
+    loggingOptions:
+      printSchema: true
+  refreshInterval: 30 5 * * *
+transformation:
+  - isDynamic: true
+    alias: Spark_SQL_1
+    description: Transforming Content Master
+    sequence: 3
+    inputDataFrameList:
+      - inputDataFrame: Content_Ingestion_1
+        tempViewName: A1
+      - inputDataFrame: Playback_Events_1
+        tempViewName: A2
+    query: select * from A2
+    optional:
+      persistDataFrame: false
+      loggingOptions:
+        printSchema: true
+    type: operationThroughSqlQuery
+controlPort:
+  dataQualityRules: {}
