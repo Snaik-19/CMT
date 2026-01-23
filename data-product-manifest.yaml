@@ -1,15 +1,47 @@
-jobId: "1065"
-jobName: Content Master
-jobType: Source Aligned Data Product
+jobId: "1066"
+jobName: Content 360
+jobType: Aggregated Data Product
 developerId: 2161a325-4de5-43e9-839a-8ee5c52cb81e
 domain: cmt
-alias: loading_Content_Master_data_in_iceberg
+alias: loading_Content_360_data_in_iceberg
 discoveryPort:
-  name: Content Master
+  name: Content 360
 inputPorts:
-  - alias: Content_Ingestion_1
+  - alias: Revenue_Attribution_1
     isDynamic: true
-    path: s3a://dataverse/testbed/cmt/content_ingestion.csv
+    dataProductUrn: urn:dv:dataproduct:6a33caf4-788d-499d-bc77-097f0a68321b
+    filter: ""
+    projection: ""
+    optional:
+      persistDataFrame: false
+    type: dataproduct
+  - alias: Engagement_Metrics_1
+    isDynamic: true
+    dataProductUrn: urn:dv:dataproduct:09580d65-48e3-4e81-bdf6-7784250401eb
+    filter: ""
+    projection: ""
+    optional:
+      persistDataFrame: false
+    type: dataproduct
+  - alias: Programming_&_Scheduling_Insights_1
+    isDynamic: true
+    dataProductUrn: urn:dv:dataproduct:d26ca940-0062-4360-b951-543c59babe4c
+    filter: ""
+    projection: ""
+    optional:
+      persistDataFrame: false
+    type: dataproduct
+  - alias: Content_Master_1
+    isDynamic: true
+    dataProductUrn: urn:dv:dataproduct:9047f7f9-ab59-4eff-bd19-20758cb6531c
+    filter: ""
+    projection: ""
+    optional:
+      persistDataFrame: false
+    type: dataproduct
+  - alias: Content_360_1
+    isDynamic: true
+    path: s3a://dataverse/testbed/cmt/adp_customer_360.csv
     optional:
       persistDataFrame: false
       advanceOptions:
@@ -17,105 +49,124 @@ inputPorts:
       enableDataReconciliation: false
       enforceSchema: false
       connection: S3 Connection - CMT
-      dataSetUrn: urn:dv:dataset:6a83512d-8c48-48d6-973c-6a6b698e2cf2
-    type: inputDelimited
-  - alias: Playback_Events_1
-    isDynamic: true
-    path: s3a://dataverse/testbed/cmt/sadp_content_master.csv
-    optional:
-      persistDataFrame: false
-      advanceOptions:
-        delimiter: ","
-      enableDataReconciliation: false
-      enforceSchema: false
-      connection: S3 Connection - CMT
-      dataSetUrn: urn:dv:dataset:88beefca-848e-4af8-9cba-c128306e1281
+      dataSetUrn: urn:dv:dataset:1faa71a8-e540-4440-8b39-eed2b2311317
     type: inputDelimited
 productState:
   isDynamic: true
-  alias: loading_Content_Master_data_in_iceberg
+  alias: loading_Content_360_data_in_iceberg
   retentionVersions: ""
   logicalSchema:
     properties:
-      content_id:
+      user_id:
         type: STRING
-        description: Unique identifier for the content item
+        description: Unique identifier of the user aggregated at ADP level
+        sourceColumn: user_id
+        sourceTable: Engagement Metrics
+      reporting_month:
+        type: STRING
+        description: Reporting month derived from engagement activity date
+        sourceColumn: activity_date
+        sourceTable: Engagement Metrics
+      country:
+        type: STRING
+        description: Country or geographic region of the user
+        sourceColumn: region
+        sourceTable: Engagement Metrics
+      acquisition_channel:
+        type: STRING
+        description: Marketing or acquisition channel derived from campaign identifier
+        sourceColumn: campaign_id
+        sourceTable: Revenue Attribution
+      subscription_plan:
+        type: STRING
+        description: Subscription plan or content associated with the user revenue
         sourceColumn: content_id
-        sourceTable: content_ingestion
-      title_name:
+        sourceTable: Revenue Attribution
+      total_sessions:
         type: STRING
-        description: Title of the content
-        sourceColumn: title_name
-        sourceTable: content_ingestion
-      content_type:
+        description: Total number of user sessions aggregated per reporting period
+        sourceColumn: session_id
+        sourceTable: Engagement Metrics
+      active_days_count:
         type: STRING
-        description: Type of content such as movie, series, or episode
-        sourceColumn: content_type
-        sourceTable: content_ingestion
-      parent_content_id:
+        description: Number of distinct days the user was active
+        sourceColumn: activity_date
+        sourceTable: Engagement Metrics
+      total_watch_time_sec:
         type: STRING
-        description: Identifier of the parent content (e.g., series for an episode)
-        sourceColumn: asset_id
-        sourceTable: content_ingestion
-      genre:
+        description: Total watch time accumulated by the user
+        sourceColumn: total_watch_time_sec
+        sourceTable: Engagement Metrics
+      avg_watch_time_per_session_sec:
         type: STRING
-        description: Primary genre of the content
-        sourceColumn: genre
-        sourceTable: content_ingestion
-      sub_genre:
+        description: Average watch time per session derived from total watch time and
+          sessions
+        sourceColumn: total_watch_time_sec
+        sourceTable: Engagement Metrics
+      bounce_rate_pct:
         type: STRING
-        description: Secondary or sub-genre classification derived from genre
-        sourceColumn: genre
-        sourceTable: content_ingestion
-      language:
+        description: Percentage of sessions with single-page engagement
+        sourceColumn: single_page_session_flag
+        sourceTable: Engagement Metrics
+      total_impressions:
         type: STRING
-        description: Primary language of the content
-        sourceColumn: language
-        sourceTable: content_ingestion
-      release_date:
+        description: Total impressions attributed to the user or campaign
+        sourceColumn: total_impressions
+        sourceTable: Revenue Attribution
+      total_clicks:
         type: STRING
-        description: Original release or publishing date of the content
-        sourceColumn: created_date
-        sourceTable: content_ingestion
-      production_house:
+        description: Total clicks attributed to the user or campaign
+        sourceColumn: total_clicks
+        sourceTable: Revenue Attribution
+      ctr_pct:
         type: STRING
-        description: Production house or content provider
-        sourceColumn: ingestion_source
-        sourceTable: content_ingestion
-      content_rating:
+        description: Click-through rate derived from clicks and impressions
+        sourceColumn: total_clicks
+        sourceTable: Revenue Attribution
+      total_spend_amount:
         type: STRING
-        description: Content rating or classification
-        sourceColumn: resolution
-        sourceTable: content_ingestion
-      duration_sec:
+        description: Total marketing spend attributed to the user or campaign
+        sourceColumn: spend_amount
+        sourceTable: Revenue Attribution
+      cpm_amount:
         type: STRING
-        description: Total duration of the content in seconds
-        sourceColumn: duration_sec
-        sourceTable: content_ingestion
-      content_status:
+        description: Cost per thousand impressions derived from spend and impressions
+        sourceColumn: spend_amount
+        sourceTable: Revenue Attribution
+      total_revenue_amount:
         type: STRING
-        description: Current lifecycle status of the content (active, inactive, archived)
-        sourceColumn: ingestion_status
-        sourceTable: content_ingestion
-      availability_start_date:
+        description: Total revenue generated from the user
+        sourceColumn: revenue_amount
+        sourceTable: Revenue Attribution
+      arpu_amount:
         type: STRING
-        description: Date and time when the content becomes available
-        sourceColumn: created_date
-        sourceTable: content_ingestion
-      availability_end_date:
+        description: Average revenue per user derived at ADP level
+        sourceColumn: revenue_amount
+        sourceTable: Revenue Attribution
+      churn_flag:
         type: STRING
-        description: Date and time when the content is no longer available
-        sourceColumn: ingestion_timestamp
-        sourceTable: content_ingestion
-      content_cost:
+        description: Indicator showing whether the user has churned
+        sourceColumn: subscriber_id
+        sourceTable: Revenue Attribution
+      churn_rate_pct:
         type: STRING
-        description: Derived or estimated content cost based on playback metrics
-        sourceColumn: bitrate
-        sourceTable: playback_events
+        description: Percentage of users who churned in the reporting period
+        sourceColumn: subscriber_id
+        sourceTable: Revenue Attribution
+      retention_rate_pct:
+        type: STRING
+        description: Percentage of users retained over the reporting period
+        sourceColumn: subscriber_id
+        sourceTable: Revenue Attribution
+      customer_lifetime_months:
+        type: STRING
+        description: Customer lifetime calculated in months based on transaction history
+        sourceColumn: attribution_date
+        sourceTable: Revenue Attribution
   stateStoreType: loadDataIceberg
   isProfilingEnabled: false
   updateStrategy: Overwrite
-  tableName: iceberg_meta.content_master
+  tableName: iceberg_meta.content_360
   warehousePath: s3a://dataverse/testbed_load/
   catalogName: postgres_catalog
   optional:
@@ -131,14 +182,20 @@ productState:
 transformation:
   - isDynamic: true
     alias: Spark_SQL_1
-    description: Transforming Content Master
-    sequence: 3
+    description: Content 360
+    sequence: 6
     inputDataFrameList:
-      - inputDataFrame: Content_Ingestion_1
-        tempViewName: A1
-      - inputDataFrame: Playback_Events_1
-        tempViewName: A2
-    query: select * from A2
+      - inputDataFrame: Revenue_Attribution_1
+        tempViewName: T1
+      - inputDataFrame: Engagement_Metrics_1
+        tempViewName: T2
+      - inputDataFrame: Programming_&_Scheduling_Insights_1
+        tempViewName: T3
+      - inputDataFrame: Content_Master_1
+        tempViewName: T4
+      - inputDataFrame: Content_360_1
+        tempViewName: T5
+    query: select * from T5
     optional:
       persistDataFrame: false
       loggingOptions:
