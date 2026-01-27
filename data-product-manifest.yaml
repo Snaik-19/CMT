@@ -127,4 +127,14 @@ transformation:
         printSchema: true
     type: operationThroughSqlQuery
 controlPort:
-  dataQualityRules: {}
+  dataQualityRules:
+    NullValueCheck:
+      productState:
+        checks:
+          - column: user_id
+        referenceAlias: loading_Engagement_Metrics_data_in_iceberg
+    UniquenessCheck:
+      productState:
+        checks:
+          - column: user_id
+        referenceAlias: loading_Engagement_Metrics_data_in_iceberg
