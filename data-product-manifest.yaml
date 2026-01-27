@@ -116,4 +116,14 @@ transformation:
         printSchema: true
     type: operationThroughSqlQuery
 controlPort:
-  dataQualityRules: {}
+  dataQualityRules:
+    NullValueCheck:
+      productState:
+        checks:
+          - column: channel_id
+        referenceAlias: loading_Programming_Scheduling_Insights_data_in_iceberg
+    UniquenessCheck:
+      productState:
+        checks:
+          - column: channel_id
+        referenceAlias: loading_Programming_Scheduling_Insights_data_in_iceberg
