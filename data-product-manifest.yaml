@@ -146,4 +146,14 @@ transformation:
         printSchema: true
     type: operationThroughSqlQuery
 controlPort:
-  dataQualityRules: {}
+  dataQualityRules:
+    NullValueCheck:
+      productState:
+        checks:
+          - column: content_id
+        referenceAlias: loading_Revenue_Attribution_data_in_iceberg
+    UniquenessCheck:
+      productState:
+        checks:
+          - column: content_id
+        referenceAlias: loading_Revenue_Attribution_data_in_iceberg
