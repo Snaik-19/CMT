@@ -7,6 +7,18 @@ alias: loading_Content_360_data_in_iceberg
 discoveryPort:
   name: Content 360
 inputPorts:
+  - alias: Content_360_1
+    isDynamic: true
+    path: s3a://dataverse/testbed/cmt/adp_customer_360.csv
+    optional:
+      persistDataFrame: false
+      advanceOptions:
+        delimiter: ","
+      enableDataReconciliation: false
+      enforceSchema: false
+      connection: S3 Connection - CMT
+      dataSetUrn: urn:dv:dataset:1faa71a8-e540-4440-8b39-eed2b2311317
+    type: inputDelimited
   - alias: Revenue_Attribution_1
     isDynamic: true
     dataProductUrn: urn:dv:dataproduct:6a33caf4-788d-499d-bc77-097f0a68321b
@@ -39,18 +51,6 @@ inputPorts:
     optional:
       persistDataFrame: false
     type: dataproduct
-  - alias: Content_360_1
-    isDynamic: true
-    path: s3a://dataverse/testbed/cmt/adp_customer_360.csv
-    optional:
-      persistDataFrame: false
-      advanceOptions:
-        delimiter: ","
-      enableDataReconciliation: false
-      enforceSchema: false
-      connection: S3 Connection - CMT
-      dataSetUrn: urn:dv:dataset:1faa71a8-e540-4440-8b39-eed2b2311317
-    type: inputDelimited
 productState:
   isDynamic: true
   alias: loading_Content_360_data_in_iceberg
@@ -202,4 +202,14 @@ transformation:
         printSchema: true
     type: operationThroughSqlQuery
 controlPort:
-  dataQualityRules: {}
+  dataQualityRules:
+    NullValueCheck:
+      productState:
+        checks:
+          - column: user_id
+        referenceAlias: loading_Content_360_data_in_iceberg
+    UniquenessCheck:
+      productState:
+        checks:
+          - column: user_id
+        referenceAlias: loading_Content_360_data_in_iceberg
