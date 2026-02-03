@@ -95,7 +95,7 @@ productState:
         sourceColumn: region
         sourceTable: src_sessionized_events
   stateStoreType: loadDataIceberg
-  isProfilingEnabled: false
+  isProfilingEnabled: true
   updateStrategy: Overwrite
   tableName: iceberg_meta.engagement_metrics
   warehousePath: s3a://dataverse/testbed_load/
