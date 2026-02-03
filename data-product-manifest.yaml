@@ -112,7 +112,7 @@ productState:
         sourceColumn: plan_id
         sourceTable: subscription_lifecycle
   stateStoreType: loadDataIceberg
-  isProfilingEnabled: false
+  isProfilingEnabled: true
   updateStrategy: Overwrite
   tableName: iceberg_meta.revenue_attribution
   warehousePath: s3a://dataverse/testbed_load/
