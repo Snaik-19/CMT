@@ -113,7 +113,7 @@ productState:
         sourceColumn: bitrate
         sourceTable: playback_events
   stateStoreType: loadDataIceberg
-  isProfilingEnabled: false
+  isProfilingEnabled: true
   updateStrategy: Overwrite
   tableName: iceberg_meta.content_master
   warehousePath: s3a://dataverse/testbed_load/
