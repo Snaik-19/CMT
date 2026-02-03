@@ -86,7 +86,7 @@ productState:
         sourceColumn: created_timestamp
         sourceTable: Program_Scheduling
   stateStoreType: loadDataIceberg
-  isProfilingEnabled: false
+  isProfilingEnabled: true
   updateStrategy: Overwrite
   tableName: iceberg_meta.programming_scheduling_insights
   warehousePath: s3a://dataverse/testbed_load/
