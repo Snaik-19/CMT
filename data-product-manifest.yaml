@@ -157,3 +157,12 @@ controlPort:
         checks:
           - column: content_id
         referenceAlias: loading_Revenue_Attribution_data_in_iceberg
+    UnacceptableTextValueCheck:
+      productState:
+        checks:
+          - column: transaction_status
+            valueList:
+              - FAILED
+              - SUCCESS
+            expression: ==
+        referenceAlias: loading_Revenue_Attribution_data_in_iceberg
