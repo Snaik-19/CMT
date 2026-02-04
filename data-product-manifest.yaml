@@ -136,5 +136,5 @@ controlPort:
     UniquenessCheck:
       productState:
         checks:
-          - column: user_id
+          - column: session_id
         referenceAlias: loading_Engagement_Metrics_data_in_iceberg
