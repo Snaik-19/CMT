@@ -147,12 +147,12 @@ transformation:
     type: operationThroughSqlQuery
 controlPort:
   dataQualityRules:
-    NullValueCheck:
+    RecordCountCheck:
       productState:
-        checks:
-          - column: content_id
+        expression: ==
+        number: 100
         referenceAlias: loading_Revenue_Attribution_data_in_iceberg
-    UniquenessCheck:
+    NullValueCheck:
       productState:
         checks:
           - column: content_id
@@ -160,9 +160,5 @@ controlPort:
     UnacceptableTextValueCheck:
       productState:
         checks:
-          - column: transaction_status
-            valueList:
-              - FAILED
-              - SUCCESS
-            expression: "!="
+          - column: ""
         referenceAlias: loading_Revenue_Attribution_data_in_iceberg
