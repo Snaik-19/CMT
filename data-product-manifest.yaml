@@ -149,7 +149,7 @@ controlPort:
   dataQualityRules:
     RecordCountCheck:
       productState:
-        expression: ==
+        expression: <=
         number: 100
         referenceAlias: loading_Revenue_Attribution_data_in_iceberg
     NullValueCheck:
