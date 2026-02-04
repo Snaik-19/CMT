@@ -122,8 +122,10 @@ controlPort:
         checks:
           - column: channel_id
         referenceAlias: loading_Programming_Scheduling_Insights_data_in_iceberg
-    UniquenessCheck:
+    DistinctValueCountCheck:
       productState:
         checks:
           - column: channel_id
+            expression: ==
+            number: 10
         referenceAlias: loading_Programming_Scheduling_Insights_data_in_iceberg
