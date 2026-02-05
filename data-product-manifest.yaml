@@ -208,8 +208,12 @@ controlPort:
         checks:
           - column: user_id
         referenceAlias: loading_Content_360_data_in_iceberg
-    UniquenessCheck:
+    UniqueCombinationCheck:
       productState:
         checks:
-          - column: user_id
+          - columns:
+              - user_id
+              - reporting_month
+              - country
+              - acquisition_channel
         referenceAlias: loading_Content_360_data_in_iceberg
