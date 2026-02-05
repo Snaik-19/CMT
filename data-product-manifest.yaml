@@ -181,7 +181,7 @@ productState:
   refreshInterval: 30 5 * * *
 transformation:
   - isDynamic: true
-    alias: Spark_SQL_1
+    alias: Spark_SQL_2
     description: Content 360
     sequence: 6
     inputDataFrameList:
