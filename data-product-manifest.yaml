@@ -163,6 +163,32 @@ productState:
         description: Customer lifetime calculated in months based on transaction history
         sourceColumn: attribution_date
         sourceTable: Revenue Attribution
+      conversion_rate_pct:
+        type: STRING
+        description: Conversion Rate derived from Total Impressions and Total Clicks
+        sourceColumn: conversion_rate_pct
+        sourceTable: Calculated_Column
+      content_availability_ratio:
+        type: STRING
+        description: Content Availability Ratio derived from Active days in month
+        sourceColumn: content_availability_ratio
+        sourceTable: Calculated_Column
+      completion_rate_pct:
+        type: STRING
+        description: Completion Rate derived from Avg Watch Time and Bounce Rate
+        sourceColumn: completion_rate_pct
+        sourceTable: Calculated_Column
+      program_utilization_rate:
+        type: STRING
+        description: Program Utilization Rate derived from Total Sessions and Customer
+          Lifetime Months
+        sourceColumn: program_utilization_rate
+        sourceTable: Calculated_Column
+      content_roi:
+        type: STRING
+        description: Content ROI derived from Total Revenue Amount and Total Spend Amount
+        sourceColumn: content_roi
+        sourceTable: Calculated_Column
   stateStoreType: loadDataIceberg
   isProfilingEnabled: true
   updateStrategy: Overwrite
